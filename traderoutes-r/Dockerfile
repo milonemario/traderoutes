@@ -36,6 +36,8 @@ RUN test -f inst/extdata/bordersgraph.graphml \
     && R CMD INSTALL . \
     && Rscript --vanilla -e "library(traderoutes); stopifnot('FRA' %in% countries()); testthat::test_local('/workspace')"
 
+CMD ["Rscript", "--vanilla", "-e", "library(traderoutes); stopifnot('FRA' %in% countries()); testthat::test_local('/workspace')"]
+
 FROM base AS build
 
 COPY . .

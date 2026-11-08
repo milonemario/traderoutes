@@ -73,6 +73,14 @@ The stages have different purposes:
   package, and runs the `testthat` suite.
 - `build` creates the R source package and runs `R CMD check` on it.
 
+The `test` stage runs its tests during `docker build`, so a failing test causes
+the image build to fail. It also has the test command as its default container
+command, so a successful image can be tested again:
+
+```bash
+docker run --rm traderoutes-r-test
+```
+
 The build stage does not publish the package and does not require repository
 credentials. To copy the built source package out of the build container:
 

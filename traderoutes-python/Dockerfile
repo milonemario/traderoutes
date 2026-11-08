@@ -35,6 +35,8 @@ COPY . .
 RUN python -m pip install --no-cache-dir --no-build-isolation . \
     && python -m unittest discover -s tests -v
 
+CMD ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]
+
 FROM base AS build
 
 COPY . .
@@ -43,10 +45,12 @@ COPY . .
 RUN python -m pip install --no-cache-dir build \
     && python -m build --outdir /dist
 
+CMD ["bash"]
+
 FROM build AS wheel-test
 
 # Test the exact wheel that would be uploaded to PyPI.
 RUN python -m pip install --no-cache-dir /dist/*.whl \
     && python -m unittest discover -s tests -v
 
-CMD ["bash"]
+CMD ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]

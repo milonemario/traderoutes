@@ -84,6 +84,15 @@ The stages have different purposes:
 - `wheel-test` installs the built wheel and runs the tests against that exact
   wheel, which is the release artifact to be uploaded to PyPI.
 
+The `test` and `wheel-test` stages run their tests during `docker build`, so a
+failing test causes the image build to fail. They also have test commands as
+their default container commands, so a successful image can be tested again:
+
+```bash
+docker run --rm traderoutes-python-test
+docker run --rm traderoutes-python-wheel-test
+```
+
 The build stages do not publish anything and do not require PyPI credentials.
 To copy the artifacts out of a build container:
 
