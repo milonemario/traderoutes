@@ -32,3 +32,10 @@ traderoutes-python/docs/_build/
 graph/FullGraph/graph*.pkl
 graph/FullGraph/graph*.graphml
 graph/*.log
+
+# Extracted copies of archived Natural Earth source data.
+# The corresponding ZIP archives are the canonical tracked inputs.
+graph/Countries/countries_boundaries/
+graph/Countries/ne_10m_admin_0_countries/
+graph/Railroads/ne_10m_railroads/
+graph/Roads/ne_10m_roads/
