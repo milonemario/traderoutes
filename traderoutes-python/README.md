@@ -116,6 +116,15 @@ podman run --rm \
   sh -c 'python -m pip install --no-cache-dir --no-deps /dist/*.whl && python -m unittest discover -s /workspace/tests -v'
 ```
 
+Validate the package metadata before uploading:
+
+```bash
+podman run --rm \
+  -v "$PWD/dist/python:/dist:Z" \
+  traderoutes-python-build-env \
+  python -m twine check /dist/*
+```
+
 ## Local tests
 
 With the runtime dependencies installed:

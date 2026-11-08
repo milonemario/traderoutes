@@ -22,7 +22,7 @@ FROM base AS build-env
 
 # Toolchain-only image. Mount the source tree and an output directory when
 # building locally so artifacts are written directly to the host.
-RUN python -m pip install --no-cache-dir build
+RUN python -m pip install --no-cache-dir build twine
 
 CMD ["bash"]
 
