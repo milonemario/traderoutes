@@ -1,6 +1,5 @@
 # Reproducible development, test, and package-build environments for
 # traderoutes. Build from this directory:
-#   docker build --target dev   -t traderoutes-r-dev .
 #   docker build --target build-env -t traderoutes-r-build-env .
 #   docker build --target test  -t traderoutes-r-test .
 #   docker build --target build -t traderoutes-r-build .
@@ -20,12 +19,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN Rscript --vanilla -e "install.packages('igraph', repos='https://cloud.r-project.org')"
-
-FROM base AS dev
-
-COPY . .
-
-CMD ["/bin/bash"]
 
 FROM base AS build-env
 

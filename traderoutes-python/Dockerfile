@@ -1,6 +1,5 @@
 # Reproducible development, test, and package-build environments for traderoutes.
 # Build from this directory:
-#   docker build --target dev   -t traderoutes-python-dev .
 #   docker build --target build-env -t traderoutes-python-build-env .
 #   docker build --target test  -t traderoutes-python-test .
 #   docker build --target build -t traderoutes-python-build .
@@ -18,14 +17,6 @@ WORKDIR /workspace
 COPY requirements.txt /tmp/requirements.txt
 RUN python -m pip install --no-cache-dir --upgrade pip \
     && python -m pip install --no-cache-dir -r /tmp/requirements.txt
-
-FROM base AS dev
-
-COPY . .
-ENV PYTHONPATH=/workspace/src
-
-# Mount the source tree at /workspace for interactive development if desired.
-CMD ["bash"]
 
 FROM base AS build-env
 

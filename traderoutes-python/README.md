@@ -69,7 +69,6 @@ build environments. Build from this directory after retrieving Git LFS files:
 
 ```bash
 git lfs pull
-docker build --target dev -t traderoutes-python-dev .
 docker build --target build-env -t traderoutes-python-build-env .
 docker build --target test -t traderoutes-python-test .
 docker build --target build -t traderoutes-python-build .
@@ -78,10 +77,9 @@ docker build --target wheel-test -t traderoutes-python-wheel-test .
 
 The stages have different purposes:
 
-- `dev` provides an interactive environment. The source tree can be mounted
-  at `/workspace` and is available through `PYTHONPATH`.
 - `build-env` provides only the build toolchain. Mount the source and output
-  directories to write artifacts directly to the host.
+  directories to write artifacts directly to the host. It can also be used as
+  an interactive development environment by mounting the source tree.
 - `test` installs the package from the source tree and runs the unit tests.
 - `build` creates the wheel and source distribution under `/dist`.
 - `wheel-test` installs the built wheel and runs the tests against that exact

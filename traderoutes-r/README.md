@@ -60,7 +60,6 @@ The [`Dockerfile`](Dockerfile) provides reproducible development, testing, and
 build environments. Build from this directory:
 
 ```bash
-docker build --target dev -t traderoutes-r-dev .
 docker build --target build-env -t traderoutes-r-build-env .
 docker build --target test -t traderoutes-r-test .
 docker build --target build -t traderoutes-r-build .
@@ -68,10 +67,7 @@ docker build --target build -t traderoutes-r-build .
 
 The stages have different purposes:
 
-- `dev` provides an interactive R environment with the source tree at
-  `/workspace`.
 - `build-env` provides only the R build/check toolchain. Mount the source and
-  output directories to write artifacts directly to the host.
 - `test` installs the package, verifies the bundled GraphML files, loads the
   package, and runs the `testthat` suite.
 - `build` creates the R source package and runs `R CMD check` on it.
