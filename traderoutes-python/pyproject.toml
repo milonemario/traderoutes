@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools>=70.0.0"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "traderoutes"
 version = "0.0.1"
-description = "Package to get trade routes worldwide."
+description = "Compute weighted international trade routes on a worldwide network."
 requires-python = ">=3.10"
 dependencies = [
   "numpy>=2.4.4",
@@ -16,9 +16,28 @@ dependencies = [
 authors = [
   {name = "Mario Milone", email = "milonemario@gmail.com"}
 ]
-license = { text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 readme = "README.md"
+keywords = ["trade routes", "transportation network", "graph", "geography"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: GIS",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+]
 
-# [projects.url]
-# Homepage = "[github url]"
-# Repository = "[github url]"
+[project.urls]
+Homepage = "https://github.com/milonemario/traderoutes"
+Repository = "https://github.com/milonemario/traderoutes"
+Issues = "https://github.com/milonemario/traderoutes/issues"
+
+[tool.setuptools.package-data]
+traderoutes = ["assets/*.pkl"]

@@ -7,7 +7,13 @@ network.
 ## Installation
 
 ```bash
-pip install -e .
+pip install traderoutes
+```
+
+For development from this repository:
+
+```bash
+python -m pip install -e .
 ```
 
 ## Requirements
@@ -79,16 +85,6 @@ tr.to_kml(path, "fra_nld.kml")
 | `transits_i(path, ...)` | Transit countries from origin side |
 | `transits_j(path, ...)` | Transit countries from destination side |
 | `to_kml(path, file)` | Export path to KML |
-
-## Exporting graphs for R / Julia
-
-The R and Julia packages require the graph data in GraphML format.
-Run the export script once after installing the Python package:
-
-```bash
-cd /path/to/Routes_Packages/Python
-python export_graphs.py
-```
 
 ## Tests
 
