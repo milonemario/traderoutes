@@ -19,7 +19,7 @@ For development from this repository:
 python -m pip install -e .
 ```
 
-The package requires Python 3.10 or newer. Runtime dependencies are declared
+The package requires Python 3.11 or newer. Runtime dependencies are declared
 in [`pyproject.toml`](pyproject.toml).
 
 ## Quick start

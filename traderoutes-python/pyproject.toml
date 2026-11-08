@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "traderoutes"
 version = "0.0.1"
 description = "Compute weighted international trade routes on a worldwide network."
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
   "numpy>=2.4.4",
   "igraph>=0.11.8",
@@ -25,7 +25,6 @@ classifiers = [
   "Intended Audience :: Science/Research",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
