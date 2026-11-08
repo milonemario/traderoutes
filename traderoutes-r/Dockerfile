@@ -1,6 +1,7 @@
 # Reproducible development, test, and package-build environments for
 # traderoutes. Build from this directory:
 #   docker build --target dev   -t traderoutes-r-dev .
+#   docker build --target build-env -t traderoutes-r-build-env .
 #   docker build --target test  -t traderoutes-r-test .
 #   docker build --target build -t traderoutes-r-build .
 
@@ -26,6 +27,12 @@ COPY . .
 
 CMD ["/bin/bash"]
 
+FROM base AS build-env
+
+# Toolchain-only image. Mount the source tree and an output directory when
+# building locally so artifacts are written directly to the host.
+CMD ["/bin/bash"]
+
 FROM base AS test
 
 COPY . .
@@ -38,7 +45,7 @@ RUN test -f inst/extdata/bordersgraph.graphml \
 
 CMD ["Rscript", "--vanilla", "-e", "library(traderoutes); stopifnot('FRA' %in% countries()); testthat::test_local('/workspace')"]
 
-FROM base AS build
+FROM build-env AS build
 
 COPY . .
 

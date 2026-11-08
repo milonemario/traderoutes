@@ -61,6 +61,7 @@ build environments. Build from this directory:
 
 ```bash
 docker build --target dev -t traderoutes-r-dev .
+docker build --target build-env -t traderoutes-r-build-env .
 docker build --target test -t traderoutes-r-test .
 docker build --target build -t traderoutes-r-build .
 ```
@@ -69,6 +70,8 @@ The stages have different purposes:
 
 - `dev` provides an interactive R environment with the source tree at
   `/workspace`.
+- `build-env` provides only the R build/check toolchain. Mount the source and
+  output directories to write artifacts directly to the host.
 - `test` installs the package, verifies the bundled GraphML files, loads the
   package, and runs the `testthat` suite.
 - `build` creates the R source package and runs `R CMD check` on it.
@@ -82,13 +85,16 @@ docker run --rm traderoutes-r-test
 ```
 
 The build stage does not publish the package and does not require repository
-credentials. To copy the built source package out of the build container:
+credentials. For local development, build and check directly into a host
+directory with Podman:
 
 ```bash
 mkdir -p dist
-container_id=$(docker create traderoutes-r-build)
-docker cp "$container_id:/workspace/." dist/
-docker rm "$container_id"
+podman run --rm \
+  -v "$PWD:/workspace:Z" \
+  -v "$PWD/dist:/out:Z" \
+  traderoutes-r-build-env \
+  sh -c 'cd /out && R CMD build --no-manual --no-build-vignettes /workspace && R CMD check --no-manual --no-vignettes --no-build-vignettes traderoutes_*.tar.gz'
 ```
 
 ## Local tests

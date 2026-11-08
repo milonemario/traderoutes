@@ -70,6 +70,7 @@ build environments. Build from this directory after retrieving Git LFS files:
 ```bash
 git lfs pull
 docker build --target dev -t traderoutes-python-dev .
+docker build --target build-env -t traderoutes-python-build-env .
 docker build --target test -t traderoutes-python-test .
 docker build --target build -t traderoutes-python-build .
 docker build --target wheel-test -t traderoutes-python-wheel-test .
@@ -79,6 +80,8 @@ The stages have different purposes:
 
 - `dev` provides an interactive environment. The source tree can be mounted
   at `/workspace` and is available through `PYTHONPATH`.
+- `build-env` provides only the build toolchain. Mount the source and output
+  directories to write artifacts directly to the host.
 - `test` installs the package from the source tree and runs the unit tests.
 - `build` creates the wheel and source distribution under `/dist`.
 - `wheel-test` installs the built wheel and runs the tests against that exact
@@ -94,13 +97,25 @@ docker run --rm traderoutes-python-wheel-test
 ```
 
 The build stages do not publish anything and do not require PyPI credentials.
-To copy the artifacts out of a build container:
+For local development, build directly into a host directory with Podman:
 
 ```bash
-mkdir -p dist
-container_id=$(docker create traderoutes-python-build)
-docker cp "$container_id:/dist/." dist/
-docker rm "$container_id"
+mkdir -p dist/python
+podman run --rm \
+  -v "$PWD:/workspace:Z" \
+  -v "$PWD/dist/python:/out:Z" \
+  traderoutes-python-build-env \
+  python -m build --outdir /out
+```
+
+To test the exported wheel in the same clean toolchain:
+
+```bash
+podman run --rm \
+  -v "$PWD:/workspace:Z" \
+  -v "$PWD/dist/python:/dist:Z" \
+  traderoutes-python-build-env \
+  sh -c 'python -m pip install --no-cache-dir --no-deps /dist/*.whl && python -m unittest discover -s /workspace/tests -v'
 ```
 
 ## Local tests

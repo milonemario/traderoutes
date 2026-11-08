@@ -1,6 +1,7 @@
 # Reproducible development, test, and package-build environments for traderoutes.
 # Build from this directory:
 #   docker build --target dev   -t traderoutes-python-dev .
+#   docker build --target build-env -t traderoutes-python-build-env .
 #   docker build --target test  -t traderoutes-python-test .
 #   docker build --target build -t traderoutes-python-build .
 #   docker build --target wheel-test -t traderoutes-python-wheel-test .
@@ -26,6 +27,14 @@ ENV PYTHONPATH=/workspace/src
 # Mount the source tree at /workspace for interactive development if desired.
 CMD ["bash"]
 
+FROM base AS build-env
+
+# Toolchain-only image. Mount the source tree and an output directory when
+# building locally so artifacts are written directly to the host.
+RUN python -m pip install --no-cache-dir build
+
+CMD ["bash"]
+
 FROM base AS test
 
 COPY . .
@@ -37,13 +46,12 @@ RUN python -m pip install --no-cache-dir --no-build-isolation . \
 
 CMD ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]
 
-FROM base AS build
+FROM build-env AS build
 
 COPY . .
 
 # The build target contains the wheel and source distribution under /dist.
-RUN python -m pip install --no-cache-dir build \
-    && python -m build --outdir /dist
+RUN python -m build --outdir /dist
 
 CMD ["bash"]
 
