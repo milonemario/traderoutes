@@ -108,6 +108,45 @@ R CMD build .
 R CMD check traderoutes_*.tar.gz
 ```
 
+To build and check the release tarball in the Podman build environment while
+writing the artifact directly to the host:
+
+```bash
+mkdir -p dist
+
+podman run --rm \
+  -v "$PWD:/workspace:Z" \
+  -v "$PWD/dist:/out:Z" \
+  traderoutes-r-build-env \
+  sh -c 'cd /out && \
+    R CMD build --no-manual --no-build-vignettes /workspace && \
+    R CMD check --no-manual --no-vignettes \
+      --no-build-vignettes traderoutes_*.tar.gz'
+```
+
+Install and smoke-test the exact checked tarball:
+
+```bash
+podman run --rm \
+  -v "$PWD/dist:/dist:Z" \
+  traderoutes-r-build-env \
+  sh -c 'R CMD INSTALL /dist/traderoutes_0.0.1.tar.gz && \
+    Rscript --vanilla -e "library(traderoutes); print(head(countries()))"'
+```
+
+For a stricter CRAN-style check, run:
+
+```bash
+podman run --rm \
+  -v "$PWD/dist:/dist:Z" \
+  traderoutes-r-build-env \
+  R CMD check --as-cran /dist/traderoutes_0.0.1.tar.gz
+```
+
+Replace `0.0.1` in these commands if the package version changes. The
+`--as-cran` check should pass without errors or warnings before a CRAN
+submission is considered.
+
 ## Main API
 
 | Function | Description |
