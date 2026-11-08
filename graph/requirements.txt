@@ -1,0 +1,9 @@
+pandas==2.2.3
+igraph==0.11.8
+geopandas==1.0.1
+networkx==3.4.2
+momepy==0.9.1
+geopy==2.4.1
+shapely==2.1.0
+# Temporary
+ipython==9.1.0

@@ -1,0 +1,21 @@
+Package: traderoutes
+Title: Compute International Trade Routes
+Version: 0.0.1
+Authors@R: person("Mario", "Milone", email = "milonemario@gmail.com",
+    role = c("aut", "cre"))
+Description: Provides tools to query border relationships between countries
+    and to compute weighted shortest-path trade routes on a worldwide
+    transportation network combining roads, shipping lanes, and ports.
+    Border queries use a precomputed adjacency graph; route computation
+    supports per-country and per-country-pair cost overrides for roads,
+    ports, and land borders.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends: R (>= 4.1.0)
+Imports:
+    igraph
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
