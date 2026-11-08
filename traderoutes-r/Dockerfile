@@ -11,14 +11,19 @@ WORKDIR /workspace
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        build-essential \
+        gfortran \
         libxml2-dev \
+        libglpk-dev \
         pkg-config \
         zip \
         r-cran-cpp11 \
         r-cran-testthat \
     && rm -rf /var/lib/apt/lists/*
 
-RUN Rscript --vanilla -e "install.packages('igraph', repos='https://cloud.r-project.org')"
+# The Ubuntu igraph binary may omit GraphML support. Build R/igraph against
+# libxml2 so read_graph(..., format = "graphml") works in the package tests.
+RUN Rscript --vanilla -e "install.packages('igraph', repos='https://cloud.r-project.org', type='source', Ncpus=2)"
 
 FROM base AS build-env
 
