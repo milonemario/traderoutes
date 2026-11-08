@@ -1,9 +1,9 @@
 # Reproducible development, test, and package-build environments for traderoutes.
 # Build from this directory:
-#   docker build --target build-env -t traderoutes-python-build-env .
-#   docker build --target test  -t traderoutes-python-test .
-#   docker build --target build -t traderoutes-python-build .
-#   docker build --target wheel-test -t traderoutes-python-wheel-test .
+#   podman build --target build-env -t traderoutes-python-build-env .
+#   podman build --target test  -t traderoutes-python-test .
+#   podman build --target build -t traderoutes-python-build .
+#   podman build --target wheel-test -t traderoutes-python-wheel-test .
 
 FROM python:3.13-slim-bookworm AS base
 

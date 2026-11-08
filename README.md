@@ -51,28 +51,29 @@ Graph source provenance and download links are documented in
 
 ## Container workflows
 
-The Dockerfiles provide reproducible development, test, and build targets.
+The container files provide reproducible development, test, and build targets
+using Podman.
 Build them from the corresponding directories after checking out the Git LFS
 assets:
 
 ```bash
 git lfs pull
 
-docker build --target build-env -t traderoutes-python-build-env ./traderoutes-python
-docker build --target test  -t traderoutes-python-test ./traderoutes-python
-docker build --target build -t traderoutes-python-build ./traderoutes-python
-docker build --target wheel-test -t traderoutes-python-wheel-test ./traderoutes-python
+podman build --target build-env -t traderoutes-python-build-env ./traderoutes-python
+podman build --target test  -t traderoutes-python-test ./traderoutes-python
+podman build --target build -t traderoutes-python-build ./traderoutes-python
+podman build --target wheel-test -t traderoutes-python-wheel-test ./traderoutes-python
 
-docker build --target build-env -t traderoutes-r-build-env ./traderoutes-r
-docker build --target test  -t traderoutes-r-test ./traderoutes-r
-docker build --target build -t traderoutes-r-build ./traderoutes-r
+podman build --target build-env -t traderoutes-r-build-env ./traderoutes-r
+podman build --target test  -t traderoutes-r-test ./traderoutes-r
+podman build --target build -t traderoutes-r-build ./traderoutes-r
 ```
 
 The graph-generation container is separate because it has a different
 geospatial toolchain:
 
 ```bash
-docker build -t traderoutes-graph ./graph
+podman build -t traderoutes-graph ./graph
 ```
 
 Package build targets create artifacts but do not upload them. Publishing is a

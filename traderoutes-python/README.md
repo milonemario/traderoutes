@@ -4,7 +4,7 @@
 routes on a worldwide road, port, and shipping network.
 
 The package bundles the precomputed graph assets required at runtime. Users do
-not need the graph-generation code or a Docker container to install and use
+not need the graph-generation code or a container to install and use
 the published package.
 
 ## Installation
@@ -62,17 +62,17 @@ tr.to_kml(path, "fra_nld.kml")
 | `transits_j(path, ...)` | Destination-side transit countries |
 | `to_kml(path, file)` | Export a path to KML |
 
-## Docker targets
+## Podman targets
 
 The [`Dockerfile`](Dockerfile) provides reproducible development, testing, and
 build environments. Build from this directory after retrieving Git LFS files:
 
 ```bash
 git lfs pull
-docker build --target build-env -t traderoutes-python-build-env .
-docker build --target test -t traderoutes-python-test .
-docker build --target build -t traderoutes-python-build .
-docker build --target wheel-test -t traderoutes-python-wheel-test .
+podman build --target build-env -t traderoutes-python-build-env .
+podman build --target test -t traderoutes-python-test .
+podman build --target build -t traderoutes-python-build .
+podman build --target wheel-test -t traderoutes-python-wheel-test .
 ```
 
 The stages have different purposes:
@@ -85,13 +85,13 @@ The stages have different purposes:
 - `wheel-test` installs the built wheel and runs the tests against that exact
   wheel, which is the release artifact to be uploaded to PyPI.
 
-The `test` and `wheel-test` stages run their tests during `docker build`, so a
+The `test` and `wheel-test` stages run their tests during `podman build`, so a
 failing test causes the image build to fail. They also have test commands as
 their default container commands, so a successful image can be tested again:
 
 ```bash
-docker run --rm traderoutes-python-test
-docker run --rm traderoutes-python-wheel-test
+podman run --rm traderoutes-python-test
+podman run --rm traderoutes-python-wheel-test
 ```
 
 The build stages do not publish anything and do not require PyPI credentials.

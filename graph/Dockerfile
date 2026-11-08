@@ -1,12 +1,10 @@
 # Create the holdup_graph container to create the final graph
 
 # Create image
-# > podman build -t holdup_graph .
-# > docker build -t holdup_graph .
+# > podman build -t traderoutes-graph .
 
 # Create container
-# > podman create -it --name holdup_graph -v ./:/data --privileged --user root holdup_graph
-# > docker create -it --name holdup_graph -v ./:/data --privileged --user root holdup_graph
+# > podman create -it --name traderoutes-graph -v ./:/data --privileged --user root traderoutes-graph
 
 FROM python:3.13-slim-bookworm
 

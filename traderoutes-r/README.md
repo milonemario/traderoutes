@@ -4,7 +4,7 @@
 routes on a worldwide road, port, and shipping network.
 
 The R package bundles the precomputed GraphML assets required at runtime under
-`inst/extdata/`. Users do not need the graph-generation code or a Docker
+`inst/extdata/`. Users do not need the graph-generation code or a container
 container to install and use the package.
 
 ## Installation
@@ -54,15 +54,15 @@ LFS, so retrieve the actual objects before building:
 git lfs pull
 ```
 
-## Docker targets
+## Podman targets
 
 The [`Dockerfile`](Dockerfile) provides reproducible development, testing, and
 build environments. Build from this directory:
 
 ```bash
-docker build --target build-env -t traderoutes-r-build-env .
-docker build --target test -t traderoutes-r-test .
-docker build --target build -t traderoutes-r-build .
+podman build --target build-env -t traderoutes-r-build-env .
+podman build --target test -t traderoutes-r-test .
+podman build --target build -t traderoutes-r-build .
 ```
 
 The stages have different purposes:
@@ -72,12 +72,12 @@ The stages have different purposes:
   package, and runs the `testthat` suite.
 - `build` creates the R source package and runs `R CMD check` on it.
 
-The `test` stage runs its tests during `docker build`, so a failing test causes
+The `test` stage runs its tests during `podman build`, so a failing test causes
 the image build to fail. It also has the test command as its default container
 command, so a successful image can be tested again:
 
 ```bash
-docker run --rm traderoutes-r-test
+podman run --rm traderoutes-r-test
 ```
 
 The build stage does not publish the package and does not require repository

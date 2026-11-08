@@ -1,8 +1,8 @@
 # Reproducible development, test, and package-build environments for
 # traderoutes. Build from this directory:
-#   docker build --target build-env -t traderoutes-r-build-env .
-#   docker build --target test  -t traderoutes-r-test .
-#   docker build --target build -t traderoutes-r-build .
+#   podman build --target build-env -t traderoutes-r-build-env .
+#   podman build --target test  -t traderoutes-r-test .
+#   podman build --target build -t traderoutes-r-build .
 
 FROM rocker/r2u:24.04 AS base
 

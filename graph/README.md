@@ -50,7 +50,7 @@ GraphML copies under `../traderoutes-r/inst/extdata/`.
 
 The generated files are large and are tracked with Git LFS where appropriate.
 They must be present as real files, rather than LFS pointer files, when
-building the package Docker images.
+building the package container images.
 
 ## Graph container
 
@@ -61,13 +61,13 @@ expects this directory to be mounted at `/data` when the container is run.
 Build the image from the repository root with:
 
 ```bash
-docker build -t traderoutes-graph ./graph
+podman build -t traderoutes-graph ./graph
 ```
 
 To open an interactive container without rebuilding the graph:
 
 ```bash
-docker run --rm -it \
+podman run --rm -it \
   -v "$PWD/graph:/data" \
   traderoutes-graph bash
 ```
