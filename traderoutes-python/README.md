@@ -1,13 +1,16 @@
-# traderoutes
+# traderoutes for Python
 
-A Python package for querying country border relationships and computing
-shortest-path international trade routes on a combined road/sea transportation
-network.
+`traderoutes` provides country-border queries and weighted shortest-path trade
+routes on a worldwide road, port, and shipping network.
+
+The package bundles the precomputed graph assets required at runtime. Users do
+not need the graph-generation code or a Docker container to install and use
+the published package.
 
 ## Installation
 
 ```bash
-pip install traderoutes
+python -m pip install traderoutes
 ```
 
 For development from this repository:
@@ -16,77 +19,84 @@ For development from this repository:
 python -m pip install -e .
 ```
 
-## Requirements
-
-- Python ≥ 3.10
-- numpy, igraph, geopy, simplekml
+The package requires Python 3.10 or newer. Runtime dependencies are declared
+in [`pyproject.toml`](pyproject.toml).
 
 ## Quick start
 
-### Border queries
-
 ```python
 import traderoutes as tr
 
-# Check whether two countries share a land border
-tr.are_neighbors("FRA", "ITA")          # True
-tr.are_neighbors("FRA", "USA")          # False
+tr.are_neighbors("FRA", "ITA")       # True
+tr.get_neighbors("FRA")              # neighboring ISO3 codes
 
-# List all neighbors
-tr.get_neighbors("FRA")                 # ['AND', 'BEL', 'DEU', ...]
+origin = tr.get_main_city("FRA")
+destination = tr.get_main_city("NLD")
+path = tr.get_path(origin, destination, road_cost=7, port_cost=1e4)
 
-# Countries two hops away (excluding direct neighbors)
-tr.get_second_neighbors("FRA")          # ['MAR', 'PRT', 'AUT', ...]
-
-# Countries bordering both inputs
-tr.get_common_neighbors("FRA", "ITA")   # ['CHE']
-```
-
-### Route computation
-
-```python
-import traderoutes as tr
-
-fra = tr.get_main_city("FRA")
-nld = tr.get_main_city("NLD")
-
-# Shortest path with road cost 7x sea cost
-path = tr.get_path(fra, nld, road_cost=7, port_cost=1e4)
-
-tr.get_pattern(path)      # 'crc'  (city-road-city, land only)
-tr.road_distance(path)    # km of road segments
-tr.sea_distance(path)     # km of sea and sea-border segments
-tr.transits_i(path)       # transit countries from origin side
-tr.transits_j(path)       # transit countries from destination side
-
-# Great-circle distance between capitals
-tr.get_great_circle("FRA", "ITA")   # ~1109.56 km
-
-# Export to KML for Google Earth
+tr.get_pattern(path)                  # e.g. "crc"
+tr.road_distance(path)                # road distance in km
+tr.sea_distance(path)                 # sea distance in km
+tr.transits_i(path)
+tr.transits_j(path)
 tr.to_kml(path, "fra_nld.kml")
 ```
 
-## API overview
+## Main API
 
 | Function | Description |
 |---|---|
-| `are_neighbors(c1, c2)` | `True` if countries share a land border |
-| `get_neighbors(c)` | List of neighboring countries |
-| `get_second_neighbors(c)` | Countries 2 hops away |
-| `get_common_neighbors(c1, c2)` | Countries neighboring both |
-| `countries()` | All countries with a main city in the graph |
+| `are_neighbors(c1, c2)` | Whether two countries share a land border |
+| `get_neighbors(c)` | Neighboring ISO3 country codes |
+| `get_second_neighbors(c)` | Countries two border hops away |
+| `get_common_neighbors(c1, c2)` | Countries neighboring both inputs |
+| `countries()` | Countries represented in the transportation graph |
 | `get_main_city(c)` | Main city vertex for a country |
 | `get_great_circle(c1, c2)` | Great-circle distance in km |
-| `get_path(v1, v2, ...)` | Weighted shortest path between vertices |
-| `get_pattern(path)` | String encoding of path vertex types |
-| `get_countries(path, ...)` | Country segments with distances |
-| `road_distance(path)` | Total road distance in km |
-| `sea_distance(path)` | Total sea and sea-border distance in km |
-| `transits_i(path, ...)` | Transit countries from origin side |
-| `transits_j(path, ...)` | Transit countries from destination side |
-| `to_kml(path, file)` | Export path to KML |
+| `get_path(v1, v2, ...)` | Weighted shortest path |
+| `get_pattern(path)` | Compact path vertex-type pattern |
+| `get_countries(path, ...)` | Country segments and distances |
+| `road_distance(path)` | Road distance in km |
+| `sea_distance(path)` | Sea distance in km |
+| `transits_i(path, ...)` | Origin-side transit countries |
+| `transits_j(path, ...)` | Destination-side transit countries |
+| `to_kml(path, file)` | Export a path to KML |
 
-## Tests
+## Docker targets
+
+The [`Dockerfile`](Dockerfile) provides reproducible development, testing, and
+build environments. Build from this directory after retrieving Git LFS files:
+
+```bash
+git lfs pull
+docker build --target dev -t traderoutes-python-dev .
+docker build --target test -t traderoutes-python-test .
+docker build --target build -t traderoutes-python-build .
+docker build --target wheel-test -t traderoutes-python-wheel-test .
+```
+
+The stages have different purposes:
+
+- `dev` provides an interactive environment. The source tree can be mounted
+  at `/workspace` and is available through `PYTHONPATH`.
+- `test` installs the package from the source tree and runs the unit tests.
+- `build` creates the wheel and source distribution under `/dist`.
+- `wheel-test` installs the built wheel and runs the tests against that exact
+  wheel, which is the release artifact to be uploaded to PyPI.
+
+The build stages do not publish anything and do not require PyPI credentials.
+To copy the artifacts out of a build container:
+
+```bash
+mkdir -p dist
+container_id=$(docker create traderoutes-python-build)
+docker cp "$container_id:/dist/." dist/
+docker rm "$container_id"
+```
+
+## Local tests
+
+With the runtime dependencies installed:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -94,4 +104,4 @@ python -m unittest discover -s tests -v
 
 ## License
 
-MIT
+MIT; see [`LICENSE`](LICENSE).

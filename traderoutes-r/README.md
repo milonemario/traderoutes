@@ -1,112 +1,122 @@
-# traderoutes
+# traderoutes for R
 
-An R package for querying country border relationships and computing weighted
-shortest-path international trade routes on a combined road/sea transportation
-network.
+`traderoutes` provides country-border queries and weighted shortest-path trade
+routes on a worldwide road, port, and shipping network.
 
-## Prerequisites
-
-The package expects these two GraphML files to be bundled in the source tree.
-They are produced by the graph creation pipeline and should be copied into
-`inst/extdata/` before installing or testing the package:
-
-- `Data/Routes_Packages/R/traderoutes/inst/extdata/bordersgraph.graphml`
-- `Data/Routes_Packages/R/traderoutes/inst/extdata/fullgraph.graphml`
-
-Once those files are present under `inst/extdata/`, they are installed with the
-package automatically.
-
-If you already have the GraphML exports, copy them into place before installing
-or testing the package:
-
-```bash
-cp /path/to/bordersgraph.graphml \
-  Data/Routes_Packages/R/traderoutes/inst/extdata/bordersgraph.graphml
-cp /path/to/fullgraph.graphml \
-  Data/Routes_Packages/R/traderoutes/inst/extdata/fullgraph.graphml
-```
+The R package bundles the precomputed GraphML assets required at runtime under
+`inst/extdata/`. Users do not need the graph-generation code or a Docker
+container to install and use the package.
 
 ## Installation
 
+Install the local source package with:
+
 ```r
-# Install from local source
-install.packages("/path/to/Routes_Packages/R/traderoutes",
-                 repos = NULL, type = "source")
+install.packages("/path/to/traderoutes-r", repos = NULL, type = "source")
 ```
 
-## Docker
-
-From `Data/Routes_Packages/R/traderoutes/`:
-
-```bash
-docker build -t holdup_route_r .
-docker create -it --name holdup_route_r holdup_route_r
-docker start -ai holdup_route_r
-```
-
-The image build now copies the package source into `/traderoutes`, checks that
-`inst/extdata/bordersgraph.graphml` and `inst/extdata/fullgraph.graphml` are
-present, and installs the package during the image build. Once the container
-starts, it is ready to use immediately.
-
-Inside the container:
-
-```bash
-Rscript --vanilla -e 'library(traderoutes)'
-Rscript --vanilla -e 'testthat::test_local("/traderoutes")'
-```
+The package requires R 4.1 or newer and imports `igraph`.
 
 ## Quick start
 
 ```r
 library(traderoutes)
 
-# --- Border queries ---
-are_neighbors("FRA", "ITA")           # TRUE
-are_neighbors("FRA", "USA")           # FALSE
+are_neighbors("FRA", "ITA")
 get_neighbors("FRA")
-get_common_neighbors("FRA", "ITA")    # "CHE"
+get_common_neighbors("FRA", "ITA")
 
-# --- Route computation ---
-v_fra <- get_main_city("FRA")
-v_nld <- get_main_city("NLD")
+origin <- get_main_city("FRA")
+destination <- get_main_city("NLD")
+path <- get_path(origin, destination, road_cost = 7, port_cost = 1e4)
 
-# Road cost 7x sea cost; high port cost discourages sea
-path <- get_path(v_fra, v_nld, road_cost = 7, port_cost = 1e4)
-get_pattern(path)        # e.g. "crc"
-road_distance(path)      # km of road
-sea_distance(path)       # km of sea and sea-border edges
-transits_i(path)         # transit countries from origin
-
-# Great-circle distance
-get_great_circle("FRA", "ITA")   # ~1109.56 km
+get_pattern(path)
+road_distance(path)
+sea_distance(path)
+transits_i(path)
+transits_j(path)
 ```
 
-## API
+## Package data
+
+The package expects these files under `inst/extdata/`:
+
+```text
+inst/extdata/bordersgraph.graphml
+inst/extdata/fullgraph.graphml
+```
+
+They are already present in this repository and are generated from the
+canonical graph outputs. The files are large and may be stored through Git
+LFS, so retrieve the actual objects before building:
+
+```bash
+git lfs pull
+```
+
+## Docker targets
+
+The [`Dockerfile`](Dockerfile) provides reproducible development, testing, and
+build environments. Build from this directory:
+
+```bash
+docker build --target dev -t traderoutes-r-dev .
+docker build --target test -t traderoutes-r-test .
+docker build --target build -t traderoutes-r-build .
+```
+
+The stages have different purposes:
+
+- `dev` provides an interactive R environment with the source tree at
+  `/workspace`.
+- `test` installs the package, verifies the bundled GraphML files, loads the
+  package, and runs the `testthat` suite.
+- `build` creates the R source package and runs `R CMD check` on it.
+
+The build stage does not publish the package and does not require repository
+credentials. To copy the built source package out of the build container:
+
+```bash
+mkdir -p dist
+container_id=$(docker create traderoutes-r-build)
+docker cp "$container_id:/workspace/." dist/
+docker rm "$container_id"
+```
+
+## Local tests
+
+With R, `igraph`, and `testthat` installed:
+
+```bash
+Rscript --vanilla -e 'testthat::test_local(".")'
+```
+
+The package checks can also be run with:
+
+```bash
+R CMD build .
+R CMD check traderoutes_*.tar.gz
+```
+
+## Main API
 
 | Function | Description |
 |---|---|
-| `are_neighbors(c1, c2)` | `TRUE` if countries share a land border |
-| `get_neighbors(c)` | Neighboring country codes |
-| `get_second_neighbors(c)` | Countries 2 hops away |
-| `get_common_neighbors(c1, c2)` | Countries neighboring both |
-| `countries()` | All countries in the network |
-| `get_main_city(c)` | Vertex index of main city |
-| `get_great_circle(c1, c2)` | Great-circle distance (km) |
+| `are_neighbors(c1, c2)` | Whether two countries share a land border |
+| `get_neighbors(c)` | Neighboring ISO3 country codes |
+| `get_second_neighbors(c)` | Countries two border hops away |
+| `get_common_neighbors(c1, c2)` | Countries neighboring both inputs |
+| `countries()` | Countries represented in the transportation graph |
+| `get_main_city(c)` | Main city vertex for a country |
+| `get_great_circle(c1, c2)` | Great-circle distance in km |
 | `get_path(v1, v2, ...)` | Weighted shortest path |
-| `get_pattern(path)` | Vertex-type pattern string |
-| `get_countries(path, ...)` | Country segments with distances |
-| `road_distance(path)` | Total road distance (km) |
-| `sea_distance(path)` | Total sea and sea-border distance (km) |
+| `get_pattern(path)` | Compact path vertex-type pattern |
+| `get_countries(path, ...)` | Country segments and distances |
+| `road_distance(path)` | Road distance in km |
+| `sea_distance(path)` | Sea distance in km |
 | `transits_i(path, ...)` | Origin-side transit countries |
 | `transits_j(path, ...)` | Destination-side transit countries |
 
-## Tests
-
-```r
-devtools::test()
-```
-
 ## License
 
-MIT
+MIT; see [`LICENSE`](LICENSE).
