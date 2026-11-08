@@ -49,6 +49,34 @@ assets should be updated together when the graph changes:
 Graph source provenance and download links are documented in
 [`graph/README.md`](graph/README.md).
 
+## Container workflows
+
+The Dockerfiles provide reproducible development, test, and build targets.
+Build them from the corresponding directories after checking out the Git LFS
+assets:
+
+```bash
+git lfs pull
+
+docker build --target dev   -t traderoutes-python-dev ./traderoutes-python
+docker build --target test  -t traderoutes-python-test ./traderoutes-python
+docker build --target build -t traderoutes-python-build ./traderoutes-python
+
+docker build --target dev   -t traderoutes-r-dev ./traderoutes-r
+docker build --target test  -t traderoutes-r-test ./traderoutes-r
+docker build --target build -t traderoutes-r-build ./traderoutes-r
+```
+
+The graph-generation container is separate because it has a different
+geospatial toolchain:
+
+```bash
+docker build -t traderoutes-graph ./graph
+```
+
+Package build targets create artifacts but do not upload them. Publishing is a
+separate release step performed after the artifacts have been tested.
+
 ## License
 
 The repository code is released under the MIT License. Individual source data
