@@ -3,6 +3,7 @@
 #   docker build --target dev   -t traderoutes-python-dev .
 #   docker build --target test  -t traderoutes-python-test .
 #   docker build --target build -t traderoutes-python-build .
+#   docker build --target wheel-test -t traderoutes-python-wheel-test .
 
 FROM python:3.13-slim-bookworm AS base
 
@@ -41,5 +42,11 @@ COPY . .
 # The build target contains the wheel and source distribution under /dist.
 RUN python -m pip install --no-cache-dir build \
     && python -m build --outdir /dist
+
+FROM build AS wheel-test
+
+# Test the exact wheel that would be uploaded to PyPI.
+RUN python -m pip install --no-cache-dir /dist/*.whl \
+    && python -m unittest discover -s tests -v
 
 CMD ["bash"]

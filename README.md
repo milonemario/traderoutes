@@ -61,6 +61,7 @@ git lfs pull
 docker build --target dev   -t traderoutes-python-dev ./traderoutes-python
 docker build --target test  -t traderoutes-python-test ./traderoutes-python
 docker build --target build -t traderoutes-python-build ./traderoutes-python
+docker build --target wheel-test -t traderoutes-python-wheel-test ./traderoutes-python
 
 docker build --target dev   -t traderoutes-r-dev ./traderoutes-r
 docker build --target test  -t traderoutes-r-test ./traderoutes-r
