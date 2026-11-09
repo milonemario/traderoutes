@@ -15,6 +15,7 @@ RUN apt-get update \
         gfortran \
         libxml2-dev \
         libglpk-dev \
+        pandoc \
         pkg-config \
         zip \
         r-cran-cpp11 \

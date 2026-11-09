@@ -1,0 +1,7 @@
+^Dockerfile$
+^LICENSE\.md$
+^dist$
+^cran-check$
+^\.git$
+^\.gitignore$
+^\.gitattributes$

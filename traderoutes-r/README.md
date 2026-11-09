@@ -119,11 +119,17 @@ podman run --rm \
 For a stricter CRAN-style check, run:
 
 ```bash
+mkdir -p cran-check
+
 podman run --rm \
-  -v "$PWD/dist:/dist:Z" \
+  -v "$PWD:/workspace:Z" \
+  -v "$PWD/cran-check:/out:Z" \
   traderoutes-r-build-env \
-  sh -c 'cd /dist && R CMD check --as-cran traderoutes_0.0.1.tar.gz'
+  sh -c 'cd /out && R CMD check --as-cran /workspace/dist/traderoutes_0.0.1.tar.gz'
 ```
+
+Use a fresh `cran-check` directory for each run. This prevents an old
+`.Rcheck` directory from being reused and confusing the result.
 
 Replace `0.0.1` in these commands if the package version changes. The
 `--as-cran` check should pass without errors or warnings before a CRAN
