@@ -76,7 +76,8 @@ rm -- inst/extdata/bordersgraph.graphml inst/extdata/fullgraph.graphml
 
 The package should contain the RDS files before running the test or build
 stages. The conversion step must be repeated whenever the canonical graphs
-change.
+change. During conversion, package-unused vertex attributes are removed and
+the RDS files are written with maximum XZ compression.
 
 After conversion, the RDS files are large and should be stored through Git
 LFS. Retrieve the actual objects before building:

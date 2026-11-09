@@ -17,6 +17,11 @@ RUN apt-get update \
         libglpk-dev \
         pandoc \
         pkg-config \
+        tidy \
+        texlive-fonts-extra \
+        texlive-fonts-recommended \
+        texlive-latex-base \
+        texlive-latex-recommended \
         zip \
         r-cran-cpp11 \
         r-cran-roxygen2 \

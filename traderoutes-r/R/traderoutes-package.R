@@ -4,8 +4,8 @@
 #' weighted shortest-path trade routes on a worldwide transportation network
 #' combining roads, shipping lanes, and ports.
 #'
-#' Before installing or testing the package, make sure the GraphML files created
-#' by the graph creation pipeline are present under `inst/extdata/`.
+#' Before installing or testing the package, make sure the generated RDS graph
+#' files are present under `inst/extdata/`.
 #'
 #' @section Border functions:
 #' [are_neighbors()], [get_neighbors()], [get_second_neighbors()],

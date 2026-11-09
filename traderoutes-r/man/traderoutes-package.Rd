@@ -11,8 +11,8 @@ weighted shortest-path trade routes on a worldwide transportation network
 combining roads, shipping lanes, and ports.
 }
 \details{
-Before installing or testing the package, make sure the GraphML files created
-by the graph creation pipeline are present under \verb{inst/extdata/}.
+Before installing or testing the package, make sure the generated RDS graph
+files are present under \verb{inst/extdata/}.
 }
 \section{Border functions}{
 

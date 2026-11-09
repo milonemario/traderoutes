@@ -46,6 +46,17 @@ convert_one <- function(name) {
 
   message("Reading ", input)
   graph <- igraph::read_graph(input, format = "graphml")
+
+  # These attributes are present in the canonical graph but are not used by
+  # the R package. Removing them reduces the distribution artifact while
+  # leaving the source GraphML unchanged.
+  unused_vertex_attributes <- c("capital", "landlocked", "connected")
+  for (attribute in unused_vertex_attributes) {
+    if (attribute %in% igraph::vertex_attr_names(graph)) {
+      graph <- igraph::delete_vertex_attr(graph, attribute)
+    }
+  }
+
   message(
     "  vertices=", igraph::vcount(graph),
     ", edges=", igraph::ecount(graph),
@@ -54,7 +65,14 @@ convert_one <- function(name) {
   )
 
   message("Writing ", output)
-  saveRDS(graph, output, compress = "xz")
+  # saveRDS() does not expose the XZ compression level directly. Writing to
+  # an xz connection allows us to use the maximum level while keeping the
+  # result readable by readRDS().
+  connection <- xzfile(output, open = "wb", compression = 9)
+  tryCatch(
+    saveRDS(graph, connection, compress = FALSE),
+    finally = close(connection)
+  )
   message("  size=", format(object.size(graph), units = "auto"),
           ", file_size=", format(file.info(output)$size, big.mark = ","), " bytes")
 }

@@ -22,15 +22,13 @@
 
   if (is.null(.pkg_env$b)) {
     warning(
-      "No borders graph found. Run tools/convert_graphml_to_rds.R before building,",
-      " or provide bordersgraph.graphml in inst/extdata.",
+      "No borders graph found. Run tools/convert_graphml_to_rds.R before building.",
       call. = FALSE
     )
   }
   if (is.null(.pkg_env$g)) {
     warning(
-      "No full graph found. Run tools/convert_graphml_to_rds.R before building,",
-      " or provide fullgraph.graphml in inst/extdata.",
+      "No full graph found. Run tools/convert_graphml_to_rds.R before building.",
       call. = FALSE
     )
   }
