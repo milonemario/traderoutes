@@ -9,7 +9,35 @@ install and use the package.
 
 ## Installation
 
-Install the local source package with:
+Install the latest published version from R-universe with:
+
+```r
+install.packages(
+  "traderoutes",
+  repos = c(
+    "https://milonemario.r-universe.dev",
+    "https://cloud.r-project.org"
+  )
+)
+```
+
+To install a specific tagged version directly from GitHub, install
+`remotes` and specify the repository tag and the R-package subdirectory:
+
+```r
+install.packages("remotes")
+
+remotes::install_github(
+  "milonemario/traderoutes",
+  ref = "v0.0.3",
+  subdir = "traderoutes-r"
+)
+```
+
+The `v0.0.3` tag refers to the shared repository release. Replace it with
+another Git tag or commit when installing a different version.
+
+For local development, install the source package with:
 
 ```r
 install.packages("/path/to/traderoutes-r", repos = NULL, type = "source")
@@ -144,7 +172,7 @@ Install and smoke-test the exact checked tarball:
 podman run --rm \
   -v "$PWD/dist:/dist:Z" \
   traderoutes-r-build-env \
-  sh -c 'R CMD INSTALL /dist/traderoutes_0.0.1.tar.gz && \
+  sh -c 'R CMD INSTALL /dist/traderoutes_0.0.3.tar.gz && \
     Rscript --vanilla -e "library(traderoutes); print(head(countries()))"'
 ```
 
@@ -157,13 +185,13 @@ podman run --rm \
   -v "$PWD:/workspace:Z" \
   -v "$PWD/cran-check:/out:Z" \
   traderoutes-r-build-env \
-  sh -c 'cd /out && R CMD check --as-cran /workspace/dist/traderoutes_0.0.1.tar.gz'
+  sh -c 'cd /out && R CMD check --as-cran /workspace/dist/traderoutes_0.0.3.tar.gz'
 ```
 
 Use a fresh `cran-check` directory for each run. This prevents an old
 `.Rcheck` directory from being reused and confusing the result.
 
-Replace `0.0.1` in these commands if the package version changes. The
+Replace `0.0.3` in these commands if the package version changes. The
 `--as-cran` check should pass without errors or warnings before a CRAN
 submission is considered.
 

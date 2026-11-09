@@ -1,6 +1,6 @@
 Package: traderoutes
 Title: Compute International Trade Routes
-Version: 0.0.1
+Version: 0.0.3
 Authors@R: person("Mario", "Milone", email = "milonemario@gmail.com",
     role = c("aut", "cre"))
 Description: Provides tools to query border relationships between countries
@@ -10,6 +10,9 @@ Description: Provides tools to query border relationships between countries
     supports per-country and per-country-pair cost overrides for roads,
     ports, and land borders.
 License: MIT + file LICENSE
+URL: https://github.com/milonemario/traderoutes,
+    https://milonemario.r-universe.dev/traderoutes
+BugReports: https://github.com/milonemario/traderoutes/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 4.1.0)
