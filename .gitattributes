@@ -6,3 +6,4 @@ graph/**/*.zip filter=lfs diff=lfs merge=lfs -text
 # Package copies of the graph assets must also be stored as real LFS objects.
 traderoutes-python/**/*.pkl filter=lfs diff=lfs merge=lfs -text
 traderoutes-r/**/*.graphml filter=lfs diff=lfs merge=lfs -text
+traderoutes-r/**/*.rds filter=lfs diff=lfs merge=lfs -text

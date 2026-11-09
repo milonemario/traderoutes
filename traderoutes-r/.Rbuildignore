@@ -2,6 +2,7 @@
 ^LICENSE\.md$
 ^dist$
 ^cran-check$
+^tools$
 ^\.git$
 ^\.gitignore$
 ^\.gitattributes$

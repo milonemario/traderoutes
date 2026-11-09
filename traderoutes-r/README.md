@@ -3,9 +3,9 @@
 `traderoutes` provides country-border queries and weighted shortest-path trade
 routes on a worldwide road, port, and shipping network.
 
-The R package bundles the precomputed GraphML assets required at runtime under
-`inst/extdata/`. Users do not need the graph-generation code or a container
-container to install and use the package.
+The R package bundles compressed, R-native `igraph` objects under
+`inst/extdata/`. Users do not need the graph-generation code or a container to
+install and use the package.
 
 ## Installation
 
@@ -42,13 +42,44 @@ transits_j(path)
 The package expects these files under `inst/extdata/`:
 
 ```text
-inst/extdata/bordersgraph.graphml
-inst/extdata/fullgraph.graphml
+inst/extdata/bordersgraph.rds
+inst/extdata/fullgraph.rds
 ```
 
-They are already present in this repository and are generated from the
-canonical graph outputs. The files are large and may be stored through Git
-LFS, so retrieve the actual objects before building:
+The RDS files are generated from the canonical GraphML outputs in `graph/`.
+The conversion tool is development-only and is excluded from the package
+source tarball. Run it from this directory with the build environment:
+
+```bash
+podman run --rm \
+  -v "$PWD:/workspace:Z" \
+  -v "$PWD/../graph:/graph:ro,Z" \
+  traderoutes-r-build-env \
+  Rscript /workspace/tools/convert_graphml_to_rds.R \
+    --input-dir /graph/FullGraph \
+    --output-dir /workspace/inst/extdata
+```
+
+Verify that the generated files exist and inspect their sizes:
+
+```bash
+ls -lh inst/extdata/*.rds
+```
+
+Once the RDS files have been generated successfully, remove the temporary
+GraphML copies from the R package directory. Keep the canonical GraphML files
+under `../graph/FullGraph/`:
+
+```bash
+rm -- inst/extdata/bordersgraph.graphml inst/extdata/fullgraph.graphml
+```
+
+The package should contain the RDS files before running the test or build
+stages. The conversion step must be repeated whenever the canonical graphs
+change.
+
+After conversion, the RDS files are large and should be stored through Git
+LFS. Retrieve the actual objects before building:
 
 ```bash
 git lfs pull

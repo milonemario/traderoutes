@@ -23,8 +23,8 @@ RUN apt-get update \
         r-cran-testthat \
     && rm -rf /var/lib/apt/lists/*
 
-# The Ubuntu igraph binary may omit GraphML support. Build R/igraph against
-# libxml2 so read_graph(..., format = "graphml") works in the package tests.
+# The conversion tool reads GraphML, so the build environment includes the
+# GraphML system dependency and an igraph build with GraphML support.
 RUN Rscript --vanilla -e "install.packages('igraph', repos='https://cloud.r-project.org', type='source', Ncpus=2)"
 
 FROM base AS build-env
@@ -38,8 +38,8 @@ FROM base AS test
 COPY . .
 
 # Install the package and run its testthat suite against the package source.
-RUN test -f inst/extdata/bordersgraph.graphml \
-    && test -f inst/extdata/fullgraph.graphml \
+RUN test -f inst/extdata/bordersgraph.rds \
+    && test -f inst/extdata/fullgraph.rds \
     && R CMD INSTALL . \
     && Rscript --vanilla -e "library(traderoutes); stopifnot('FRA' %in% countries()); testthat::test_local('/workspace')"
 

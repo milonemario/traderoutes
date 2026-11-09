@@ -1,7 +1,8 @@
 skip_no_graphs <- function() {
   skip_if_not(
-    file.exists(system.file("extdata", "bordersgraph.graphml", package = "traderoutes")),
-    "bordersgraph.graphml not found in inst/extdata"
+    file.exists(system.file("extdata", "bordersgraph.rds", package = "traderoutes")) ||
+      file.exists(system.file("extdata", "bordersgraph.graphml", package = "traderoutes")),
+    "No borders graph found in inst/extdata"
   )
 }
 

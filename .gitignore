@@ -20,6 +20,7 @@ traderoutes-r/*.tgz
 
 # Documentation/build output
 traderoutes-python/docs/_build/
+traderoutes-r/cran-check/
 
 # Local/editor/system files
 .DS_Store

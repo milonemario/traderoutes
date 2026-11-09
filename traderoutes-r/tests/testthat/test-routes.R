@@ -1,7 +1,8 @@
 skip_no_full <- function() {
   skip_if_not(
-    file.exists(system.file("extdata", "fullgraph.graphml", package = "traderoutes")),
-    "fullgraph.graphml not found in inst/extdata"
+    file.exists(system.file("extdata", "fullgraph.rds", package = "traderoutes")) ||
+      file.exists(system.file("extdata", "fullgraph.graphml", package = "traderoutes")),
+    "No full graph found in inst/extdata"
   )
 }
 
