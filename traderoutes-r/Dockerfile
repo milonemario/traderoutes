@@ -18,6 +18,7 @@ RUN apt-get update \
         pkg-config \
         zip \
         r-cran-cpp11 \
+        r-cran-roxygen2 \
         r-cran-testthat \
     && rm -rf /var/lib/apt/lists/*
 
@@ -49,7 +50,8 @@ COPY . .
 
 # Build the source package and run R's package checks. The resulting tarball
 # is left in /workspace for extraction from the build container.
-RUN R CMD build --no-manual --no-build-vignettes . \
+RUN Rscript --vanilla -e "roxygen2::roxygenise('/workspace')" \
+    && R CMD build --no-manual --no-build-vignettes . \
     && R CMD check --no-manual --no-vignettes --no-build-vignettes traderoutes_*.tar.gz
 
 CMD ["/bin/bash"]

@@ -119,6 +119,7 @@ podman run --rm \
   -v "$PWD/dist:/out:Z" \
   traderoutes-r-build-env \
   sh -c 'cd /out && \
+    Rscript --vanilla -e "roxygen2::roxygenise(\"/workspace\")" && \
     R CMD build --no-manual --no-build-vignettes /workspace && \
     R CMD check --no-manual --no-vignettes \
       --no-build-vignettes traderoutes_*.tar.gz'
