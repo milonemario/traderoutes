@@ -68,6 +68,7 @@ podman build --target build -t traderoutes-r-build .
 The stages have different purposes:
 
 - `build-env` provides only the R build/check toolchain. Mount the source and
+  output directories to write artifacts directly to the host.
 - `test` installs the package, verifies the bundled GraphML files, loads the
   package, and runs the `testthat` suite.
 - `build` creates the R source package and runs `R CMD check` on it.
@@ -80,32 +81,12 @@ command, so a successful image can be tested again:
 podman run --rm traderoutes-r-test
 ```
 
-The build stage does not publish the package and does not require repository
-credentials. For local development, build and check directly into a host
-directory with Podman:
-
-```bash
-mkdir -p dist
-podman run --rm \
-  -v "$PWD:/workspace:Z" \
-  -v "$PWD/dist:/out:Z" \
-  traderoutes-r-build-env \
-  sh -c 'cd /out && R CMD build --no-manual --no-build-vignettes /workspace && R CMD check --no-manual --no-vignettes --no-build-vignettes traderoutes_*.tar.gz'
-```
-
 ## Local tests
 
-With R, `igraph`, and `testthat` installed:
+With R, `igraph`, and `testthat` installed, run the source-tree tests with:
 
 ```bash
 Rscript --vanilla -e 'testthat::test_local(".")'
-```
-
-The package checks can also be run with:
-
-```bash
-R CMD build .
-R CMD check traderoutes_*.tar.gz
 ```
 
 To build and check the release tarball in the Podman build environment while
