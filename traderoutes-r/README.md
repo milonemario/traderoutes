@@ -122,7 +122,7 @@ For a stricter CRAN-style check, run:
 podman run --rm \
   -v "$PWD/dist:/dist:Z" \
   traderoutes-r-build-env \
-  R CMD check --as-cran /dist/traderoutes_0.0.1.tar.gz
+  sh -c 'cd /dist && R CMD check --as-cran traderoutes_0.0.1.tar.gz'
 ```
 
 Replace `0.0.1` in these commands if the package version changes. The
